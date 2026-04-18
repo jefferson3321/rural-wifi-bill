@@ -4,10 +4,11 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
-    zip \
-    unzip \
+    zip unzip \
     && docker-php-ext-install mysqli pdo pdo_mysql mbstring \
-    && a2enmod rewrite
+    && a2enmod rewrite \
+    && a2dismod mpm_event \
+    && a2enmod mpm_prefork
 
 COPY . /var/www/html/
 

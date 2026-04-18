@@ -1,8 +1,15 @@
+FROM php:8.2-cli
 
-FROM php:8.2-apache
+RUN apt-get update && apt-get install -y \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip unzip curl \
+    && docker-php-ext-install mysqli pdo pdo_mysql mbstring
 
-RUN docker-php-ext-install mysqli pdo pdo_mysql
+WORKDIR /app
+COPY . /app
 
-COPY . /var/www/html/
+EXPOSE 8080
 
-EXPOSE 80
+CMD ["php", "-S", "0.0.0.0:8080", "-t", "/app"]

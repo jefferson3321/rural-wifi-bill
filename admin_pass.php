@@ -1,1 +1,0 @@
-<?php define('ADMIN_PASS_HASH', '$2y$10$HaYCJs9psSvtFfaMpYaMRe0TmCEQMn1tw3FPFlmw6W.petkZ3prOC');

@@ -122,7 +122,7 @@ async function doLogin() {
     err.textContent = res.message || 'Login failed.';
     err.style.display = 'block'; return;
   }
-  window.location.href = 'customer.html';
+  window.location.href = 'customer.php';
 }
 (async () => {
   const res = await api(API.auth, { action:'me' });

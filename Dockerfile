@@ -13,8 +13,8 @@ RUN apt-get update && apt-get install -y \
     && a2enmod rewrite \
     && rm -rf /var/lib/apt/lists/*
 
-# Remove default Apache page
-RUN rm /var/www/html/index.html
+# Wipe default Apache content completely
+RUN rm -rf /var/www/html/*
 
 COPY . /var/www/html/
 

@@ -1,17 +1,18 @@
 DirectoryIndex index.php index.html
 
+RewriteEngine On
+RewriteRule ^customer$ /customer_login.php [L,R=301]
+RewriteRule ^admin$ /admin_login.php [L,R=301]
+
 # Protect sensitive files
 <FilesMatch "\.(sql|env|json|toml|log)$">
     Require all denied
 </FilesMatch>
-# Protect sensitive PHP files
 <FilesMatch "^(admin_pass|reset_admin)\.php$">
     Require all denied
 </FilesMatch>
-# Protect HTML files from direct access
 <FilesMatch "^(admin|customer)\.html$">
     Require all denied
 </FilesMatch>
-# No directory listing
 Options -Indexes
 ServerSignature Off

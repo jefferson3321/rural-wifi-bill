@@ -1,17 +1,25 @@
-FROM php:8.2-apache
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip unzip \
-    && docker-php-ext-install mysqli pdo pdo_mysql mbstring \
+    apache2 \
+    php8.1 \
+    php8.1-mysql \
+    php8.1-mbstring \
+    php8.1-xml \
+    php8.1-curl \
+    libapache2-mod-php8.1 \
     && a2enmod rewrite \
-    && a2dismod mpm_event \
-    && a2enmod mpm_prefork
+    && rm -rf /var/lib/apt/lists/*
 
 COPY . /var/www/html/
+
+RUN chown -R www-data:www-data /var/www/html/ \
+    && chmod -R 755 /var/www/html/
 
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 EXPOSE 80
+
+CMD ["apache2ctl", "-D", "FOREGROUND"]

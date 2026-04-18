@@ -10,4 +10,4 @@ COPY . /app
 
 EXPOSE 8080
 
-CMD ["php", "-S", "0.0.0.0:8080", "-t", "/app/bill"]
+CMD ["php", "-S", "0.0.0.0:8080", "-t", "/app"]

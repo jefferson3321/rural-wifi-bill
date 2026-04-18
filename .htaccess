@@ -1,0 +1,15 @@
+# Protect sensitive files
+<FilesMatch "\.(sql|env|json|toml|log)$">
+    Require all denied
+</FilesMatch>
+
+# Protect sensitive PHP files
+<FilesMatch "^(admin_pass|setup|reset_admin)\.php$">
+    Require all denied
+</FilesMatch>
+
+# No directory listing
+Options -Indexes
+
+# Hide server info
+ServerSignature Off

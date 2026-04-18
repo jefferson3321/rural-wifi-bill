@@ -1,19 +1,17 @@
+DirectoryIndex index.php index.html
+
 # Protect sensitive files
 <FilesMatch "\.(sql|env|json|toml|log)$">
     Require all denied
 </FilesMatch>
-
 # Protect sensitive PHP files
 <FilesMatch "^(admin_pass|reset_admin)\.php$">
     Require all denied
 </FilesMatch>
-
 # Protect HTML files from direct access
 <FilesMatch "^(admin|customer)\.html$">
     Require all denied
 </FilesMatch>
-
 # No directory listing
 Options -Indexes
-
 ServerSignature Off

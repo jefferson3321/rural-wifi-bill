@@ -84,7 +84,7 @@ async function doLogin() {
     err.textContent = res.message || 'Login failed.';
     err.style.display = 'block'; return;
   }
-  window.location.href = 'admin.html';
+  window.location.href = 'admin.php';
 }
 (async () => {
   const res = await api(API.auth, { action:'me' });

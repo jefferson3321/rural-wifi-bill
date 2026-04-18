@@ -1,13 +1,14 @@
-FROM php:8.2-cli
+FROM php:8.2-apache
 
-RUN apt-get update && apt-get install -y \
-    libpng-dev libonig-dev libxml2-dev \
-    zip unzip curl \
-    && docker-php-ext-install mysqli pdo pdo_mysql mbstring
+RUN docker-php-ext-install mysqli pdo pdo_mysql mbstring curl
 
-WORKDIR /app
-COPY . /app
+RUN a2enmod rewrite
 
-EXPOSE 8080
+COPY . /var/www/html/
 
-CMD ["php", "-S", "0.0.0.0:8080", "-t", "/app"]
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
+RUN sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
+
+EXPOSE 80
+ENV PORT=80

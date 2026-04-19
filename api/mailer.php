@@ -48,6 +48,7 @@ function sendMail(string $toEmail, string $toName, string $subject, string $html
         $mail->SMTPSecure = $cfg['encryption'];
         $mail->Port       = $cfg['port'];
         $mail->CharSet    = 'UTF-8';
+        $mail->Timeout    = 10;
         $mail->SMTPOptions = [
             'ssl' => [
                 'verify_peer'       => false,

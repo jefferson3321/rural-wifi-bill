@@ -1129,7 +1129,8 @@ async function loadGcash() {
   document.getElementById('smtpFromName').value  = s.smtp_from_name||'Rural WiFi';
   document.getElementById('smtpPass').placeholder = s.smtp_pass_set ? 'App password saved ✅ (leave blank to keep)' : 'Enter Gmail App Password';
   if (s.smtp_pass_set) document.getElementById('emailStatus').textContent = '📧 Email is configured and ready.';
-  document.getElementById('appUrlInput').value = s.app_url || '';
+  const appUrlEl = document.getElementById('appUrlInput');
+if (appUrlEl) appUrlEl.value = s.app_url || '';
 }
 async function saveEmail() {
   const user = document.getElementById('smtpUser').value.trim();
@@ -1156,7 +1157,8 @@ async function testEmail() {
 }
 async function saveAppUrl() {
   const url = document.getElementById('appUrlInput').value.trim();
-  const msg = document.getElementById('appUrlMsg');
+const msg = document.getElementById('appUrlMsg');
+if (!msg) return;
   if (!url) { msg.style.cssText='display:block;background:#fff0f0;color:var(--red);'; msg.textContent='Ilagay ang ngrok URL.'; setTimeout(()=>msg.style.display='none',3000); return; }
   if (!url.startsWith('http')) { msg.style.cssText='display:block;background:#fff0f0;color:var(--red);'; msg.textContent='Dapat magsimula sa https://'; setTimeout(()=>msg.style.display='none',3000); return; }
   const res = await api(API.settings, {action:'save_app_url', app_url:url});

@@ -12,27 +12,26 @@ function getSmtpConfig(): array {
         $rows = $db->query("SELECT setting_key, setting_value FROM settings")
                    ->fetchAll(PDO::FETCH_KEY_PAIR);
         return [
-            'host'       => $rows['smtp_host']       ?? 'smtp.gmail.com',
-            'port'       => (int)($rows['smtp_port'] ?? 587),
-            'encryption' => $rows['smtp_encryption'] ?? 'tls',
-            'username'   => $rows['smtp_username']   ?? '',
-            'password'   => $rows['smtp_password']   ?? '',
-            'from_email' => $rows['from_email']      ?? ($rows['smtp_username'] ?? ''),
-            'from_name'  => $rows['from_name']       ?? 'Rural WiFi',
+            'host'       => $rows['smtp_host']       ?? $_ENV['SMTP_HOST']     ?? 'smtp.gmail.com',
+            'port'       => (int)($rows['smtp_port'] ?? $_ENV['SMTP_PORT']     ?? 587),
+            'encryption' => $rows['smtp_encryption'] ?? $_ENV['SMTP_ENCRYPTION'] ?? 'tls',
+            'username'   => $rows['smtp_username']   ?? $_ENV['SMTP_USERNAME'] ?? '',
+            'password'   => $rows['smtp_password']   ?? $_ENV['SMTP_PASSWORD'] ?? '',
+            'from_email' => $rows['from_email']      ?? $_ENV['FROM_EMAIL']    ?? '',
+            'from_name'  => $rows['from_name']       ?? $_ENV['FROM_NAME']     ?? 'Rural WiFi',
         ];
     } catch (Throwable $e) {
         return [
-            'host'       => 'smtp.gmail.com',
-            'port'       => 587,
-            'encryption' => 'tls',
-            'username'   => '',
-            'password'   => '',
-            'from_email' => '',
-            'from_name'  => 'Rural WiFi',
+            'host'       => $_ENV['SMTP_HOST']        ?? 'smtp.gmail.com',
+            'port'       => (int)($_ENV['SMTP_PORT']  ?? 587),
+            'encryption' => $_ENV['SMTP_ENCRYPTION']  ?? 'tls',
+            'username'   => $_ENV['SMTP_USERNAME']    ?? '',
+            'password'   => $_ENV['SMTP_PASSWORD']    ?? '',
+            'from_email' => $_ENV['FROM_EMAIL']       ?? '',
+            'from_name'  => $_ENV['FROM_NAME']        ?? 'Rural WiFi',
         ];
     }
 }
-
 function sendMail(string $toEmail, string $toName, string $subject, string $htmlBody): array {
     if (!$toEmail || !filter_var($toEmail, FILTER_VALIDATE_EMAIL)) {
         return ['success' => false, 'message' => 'Invalid email address.'];

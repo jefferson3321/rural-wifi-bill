@@ -34,44 +34,41 @@ function sendMail(string $toEmail, string $toName, string $subject, string $html
     }
 
     $cfg = getSmtpConfig();
-    if (empty($cfg['username']) || empty($cfg['password'])) {
-        return ['success' => false, 'message' => 'SMTP not configured. Go to Settings → Email Settings.'];
+    $apiKey = $cfg['password']; // Resend API key stored in smtp_password
+    
+    if (empty($apiKey)) {
+        return ['success' => false, 'message' => 'Resend API key not configured.'];
     }
 
-    $mail = new PHPMailer(true);
-    try {
-        $mail->isSMTP();
-        $mail->Host       = $cfg['host'];
-        $mail->SMTPAuth   = true;
-        $mail->Username   = $cfg['username'];
-        $mail->Password   = $cfg['password'];
-        $mail->SMTPSecure = $cfg['encryption'];
-        $mail->Port       = $cfg['port'];
-        $mail->CharSet    = 'UTF-8';
-        $mail->Timeout    = 10;
-        $mail->SMTPOptions = [
-            'ssl' => [
-                'verify_peer'       => false,
-                'verify_peer_name'  => false,
-                'allow_self_signed' => true,
-            ],
-        ];
+    $payload = json_encode([
+        'from'    => 'Rural WiFi <onboarding@resend.dev>',
+        'to'      => [$toEmail],
+        'subject' => $subject,
+        'html'    => $htmlBody,
+    ]);
 
-        $fromEmail = $cfg['from_email'] ?: $cfg['username'];
-        $mail->setFrom($fromEmail, $cfg['from_name']);
-        $mail->addAddress($toEmail, $toName);
+    $ch = curl_init('https://api.resend.com/emails');
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST           => true,
+        CURLOPT_POSTFIELDS     => $payload,
+        CURLOPT_HTTPHEADER     => [
+            'Authorization: Bearer ' . $apiKey,
+            'Content-Type: application/json',
+        ],
+        CURLOPT_TIMEOUT        => 15,
+    ]);
 
-        $mail->isHTML(true);
-        $mail->Subject = $subject;
-        $mail->Body    = $htmlBody;
-        $mail->AltBody = strip_tags(str_replace(['<br>', '<br/>', '<br />'], "\n", $htmlBody));
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
 
-        $mail->send();
+    if ($httpCode === 200 || $httpCode === 201) {
         return ['success' => true, 'message' => 'Email sent.'];
-    } catch (Exception $e) {
-        error_log('[Mailer] ' . $e->getMessage());
-        return ['success' => false, 'message' => $e->getMessage()];
     }
+
+    $error = json_decode($response, true);
+    return ['success' => false, 'message' => $error['message'] ?? 'Failed to send email.'];
 }
 
 function emailWrapper(string $content): string {

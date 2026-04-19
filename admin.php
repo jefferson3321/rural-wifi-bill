@@ -8,22 +8,14 @@
 <style>
 /* ── ADMIN OVERRIDES ── */
 :root{--sidebar-w:220px;}
-
-/* Top bar accent for admin */
 .mobileTopBar{background:#0d1520;}
-
-/* Compact sidebar */
 .sidebar{background:#0d1520;}
 .sidebarLogo{padding:18px 16px;}
 .navItem{padding:10px 10px;margin:1px 6px;font-size:13px;}
 .navSection{padding:12px 10px 3px;font-size:9px;}
-
-/* Page title row */
 .pgRow{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
 .pgTitle{font-family:'DM Serif Display',serif;font-size:20px;color:var(--ink);}
 @media(min-width:768px){.pgTitle{font-size:24px;}}
-
-/* Stats row */
 .statRow{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px;}
 @media(min-width:600px){.statRow{grid-template-columns:repeat(4,1fr);}}
 .sc{background:#fff;border-radius:12px;padding:14px 16px;border-top:3px solid var(--gold);box-shadow:var(--shadow);}
@@ -32,8 +24,6 @@
 .sc-val.g{color:var(--green);}
 .sc-val.r{color:var(--red);}
 .sc-val.b{color:var(--blue);}
-
-/* Proof card */
 .proofCard{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow);}
 .proofCard.pend{border-left:4px solid var(--gold);}
 .proofCard.done{border-left:4px solid var(--green);opacity:.75;}
@@ -41,49 +31,28 @@
 .proofRef{display:inline-block;background:#fff8f2;border:1px solid #f0ddd0;border-radius:8px;padding:5px 12px;font-size:13px;margin-top:8px;}
 .proofActions{display:flex;gap:8px;margin-top:12px;}
 .proofActions button{flex:1;}
-
-/* Customer row actions */
 .cRow-actions{display:flex;gap:6px;}
-
-/* Invoice row */
 .invRow{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border);gap:8px;flex-wrap:wrap;}
 .invRow:last-child{border-bottom:none;}
 .invRow-left{flex:1;min-width:160px;}
 .invRow-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-
-/* Alert banner */
 .alertBanner{display:none;background:#fff8e1;border:1.5px solid #ffe082;border-radius:12px;padding:13px 16px;margin-bottom:14px;align-items:center;gap:12px;flex-wrap:wrap;}
 .alertBanner.show{display:flex;}
-
-/* Revenue row */
 .revRow{display:flex;gap:0;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:#fff;margin-bottom:16px;}
 .revItem{flex:1;text-align:center;padding:16px 10px;}
 .revItem+.revItem{border-left:1px solid var(--border);}
 .revItem-label{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:5px;}
 .revItem-val{font-family:'DM Serif Display',serif;font-size:22px;}
 @media(max-width:480px){.revRow{flex-direction:column;} .revItem+.revItem{border-left:none;border-top:1px solid var(--border);}}
-
-/* GCash preview card */
 .gcashPreview{background:linear-gradient(135deg,#0a4fff,#0070e0);border-radius:14px;padding:20px;text-align:center;color:#fff;margin-top:14px;}
-
-/* Section header */
 .sectionHd{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin:18px 0 10px;}
 .sectionHd.gold{color:var(--gold);}
 .sectionHd.green{color:var(--green);}
-
-/* Empty */
 .empty{text-align:center;padding:32px 20px;color:var(--muted);}
 .emptyIcon{font-size:32px;margin-bottom:8px;}
-
-/* Customer list */
 .custCard{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow);}
 .custCard-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;}
 .cRow-actions{display:flex;gap:6px;flex-wrap:wrap;}
-
-/* Due Soon Alert Cards */
-/* dueSoonCard styles removed */
-
-/* ── MESSAGES ── */
 .msgLayout{display:grid;grid-template-columns:1fr;gap:14px;}
 @media(min-width:768px){.msgLayout{grid-template-columns:260px 1fr;min-height:calc(100vh - 130px);}}
 .convList{background:#fff;border:1px solid var(--border);border-radius:12px;overflow-y:auto;max-height:420px;}
@@ -152,7 +121,6 @@
     <div class="navSection">Main</div>
     <div class="navItem active" id="nav-dashboard" onclick="showPage('dashboard')">
       <span class="icon">📊</span> Dashboard
-
     </div>
 
     <div class="navSection">Manage</div>
@@ -167,7 +135,6 @@
       <span class="icon">💬</span> Messages
       <span class="notifBadge" id="msgBadge" style="display:none;margin-left:auto;"></span>
     </div>
-    <a href="demo.html" style="display:none;"></a>
     <div class="navItem" onclick="openModal('demoModal')" style="color:#c9993a;opacity:.85;cursor:pointer;">
       <span class="icon">🎮</span> Demo Mode
     </div>
@@ -192,33 +159,24 @@
         <div class="pgTitle">Dashboard</div>
         <button class="btn btn-outline" onclick="showPage('invoices')">📄 Invoices &amp; Billing →</button>
       </div>
-
-      <!-- Alert for pending actions -->
       <div class="alertBanner" id="alertBanner">
         <span style="font-size:20px;">⚠️</span>
         <div style="flex:1;" id="alertText"></div>
       </div>
-
-      <!-- Stats -->
       <div class="statRow">
         <div class="sc"><div class="sc-label">Customers</div><div class="sc-val" id="s-cust">—</div></div>
         <div class="sc"><div class="sc-label">Overdue</div><div class="sc-val r" id="s-pend">—</div></div>
         <div class="sc"><div class="sc-label">Paid This Month</div><div class="sc-val g" id="s-paid">—</div></div>
         <div class="sc"><div class="sc-label">Unpaid</div><div class="sc-val" id="s-unp">—</div></div>
       </div>
-
-      <!-- Revenue summary -->
       <div class="revRow" id="revRow">
         <div class="revItem"><div class="revItem-label">Total Billed</div><div class="revItem-val" id="rv-billed">—</div></div>
         <div class="revItem"><div class="revItem-label">Collected</div><div class="revItem-val g" id="rv-coll" style="color:var(--green);">—</div></div>
         <div class="revItem"><div class="revItem-label">Outstanding</div><div class="revItem-val" id="rv-out" style="color:var(--gold);">—</div></div>
       </div>
-
-      <!-- Pending payment proofs — inline review -->
       <div id="dashPendingSection">
         <div id="dashPendingList"></div>
       </div>
-
       <div id="dashUnsentSection">
         <div class="sectionHd" id="unsentHd" style="display:none;"></div>
         <div id="dashUnsentList"></div>
@@ -239,18 +197,10 @@
       <div class="pgRow">
         <div class="pgTitle">Invoices &amp; Billing</div>
       </div>
-
-      <!-- Pending payment proofs — inline review -->
       <div class="sectionHd gold" id="pendingHd" style="display:none;"></div>
       <div id="dashPendingList" style="margin-bottom:8px;"></div>
-
-      <!-- Due Soon / Action Needed -->
       <div id="dueSoonSection"></div>
-
-      <!-- This Month -->
       <div id="thisMonthSection"></div>
-
-      <!-- Previous Months -->
       <div id="prevMonthSection"></div>
     </div>
 
@@ -258,6 +208,8 @@
     <div class="page" id="page-settings">
       <div class="pgRow"><div class="pgTitle">Settings</div></div>
       <div style="max-width:460px;">
+
+        <!-- GCash -->
         <div class="card">
           <div class="cardHeader"><div class="cardTitle">💳 GCash Account</div></div>
           <div class="cardBody">
@@ -275,12 +227,13 @@
             <button class="btnPrimary" onclick="saveGcash()" style="background:linear-gradient(135deg,#0a4fff,#0070e0);">💾 Save GCash Settings</button>
           </div>
         </div>
+
+        <!-- GCash Preview -->
         <div class="gcashPreview">
           <div style="font-size:10px;opacity:.5;letter-spacing:2px;font-weight:700;margin-bottom:6px;">PAY VIA GCASH TO</div>
           <div style="font-size:28px;font-weight:800;letter-spacing:2px;margin-bottom:4px;" id="pvNum">—</div>
           <div style="font-size:14px;font-weight:600;opacity:.8;" id="pvName">—</div>
         </div>
-
 
         <!-- Email Settings -->
         <div class="card" style="margin-top:20px;">
@@ -310,6 +263,23 @@
             <div id="emailStatus" style="margin-top:10px;font-size:12px;color:var(--muted);"></div>
           </div>
         </div>
+
+        <!-- ✅ FIX: Portal URL card — missing HTML na nagdudulot ng JS crash -->
+        <div class="card" style="margin-top:20px;">
+          <div class="cardHeader"><div class="cardTitle">🔗 Portal URL</div></div>
+          <div class="cardBody">
+            <div style="background:#f0f7ff;border:1px solid #cce0ff;border-radius:8px;padding:10px 14px;font-size:12px;color:#004a99;margin-bottom:14px;">
+              💡 Ilagay ang URL ng iyong Railway app. Gagamitin ito sa email links ng customers.
+            </div>
+            <div class="field">
+              <label>App URL</label>
+              <input type="url" id="appUrlInput" placeholder="https://your-app.up.railway.app">
+            </div>
+            <div id="appUrlMsg" style="display:none;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:12px;"></div>
+            <button class="btnPrimary" onclick="saveAppUrl()">💾 Save Portal URL</button>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -317,11 +287,9 @@
     <div class="page" id="page-messages">
       <div class="pgRow"><div class="pgTitle">Messages</div></div>
       <div class="msgLayout">
-        <!-- Conversation list -->
         <div class="convList" id="convList">
           <div class="noConvYet"><div style="font-size:28px;margin-bottom:8px;">💬</div><p>Loading…</p></div>
         </div>
-        <!-- Chat panel -->
         <div class="chatPanel" id="chatPanel">
           <div class="noConvYet" id="noChatSelected">
             <div style="font-size:32px;margin-bottom:10px;">💬</div>
@@ -347,8 +315,6 @@
 
   </div><!-- /mainContent -->
 </div><!-- /appWrap -->
-
-<!-- Bottom nav removed — sidebar only -->
 
 <!-- ═══ MODALS ═══ -->
 
@@ -431,14 +397,12 @@
   </div>
 </div>
 
-<!-- ══ DEMO MODE MODAL ══ -->
+<!-- Demo Mode Modal -->
 <div class="overlay" id="demoModal">
   <div class="modal" style="max-width:500px;">
     <button class="closeBtn" onclick="closeModal('demoModal')">&times;</button>
     <div class="modalTitle">🎮 Demo Mode</div>
     <div class="modalSub">Generate invoices for any month, delete test data, or reset customers.</div>
-
-    <!-- Stats strip -->
     <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;" id="demoStats">
       <div style="flex:1;min-width:80px;background:var(--cream);border-radius:10px;padding:10px 12px;text-align:center;">
         <div style="font-size:20px;font-weight:800;color:var(--ink);" id="dst-inv">—</div>
@@ -457,8 +421,6 @@
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">Suspended</div>
       </div>
     </div>
-
-    <!-- Generate for month -->
     <div style="background:var(--cream);border-radius:12px;padding:14px 16px;margin-bottom:12px;">
       <div style="font-size:12px;font-weight:700;margin-bottom:10px;">⚡ Generate Invoices for a Month</div>
       <div style="display:flex;gap:8px;align-items:center;">
@@ -466,8 +428,6 @@
         <button class="btn btn-gold btn-sm" onclick="demoGenerate(this)">Generate</button>
       </div>
     </div>
-
-    <!-- Delete invoices -->
     <div style="background:var(--cream);border-radius:12px;padding:14px 16px;margin-bottom:12px;">
       <div style="font-size:12px;font-weight:700;margin-bottom:10px;">🗑 Delete Invoices</div>
       <div style="display:flex;gap:8px;align-items:center;">
@@ -477,15 +437,11 @@
         <button class="btn btn-red btn-sm" onclick="demoDelete(this)">Delete</button>
       </div>
     </div>
-
-    <!-- Reset customers -->
     <div style="background:var(--cream);border-radius:12px;padding:14px 16px;margin-bottom:16px;">
       <div style="font-size:12px;font-weight:700;margin-bottom:6px;">✅ Reset Customer Status</div>
       <div style="font-size:12px;color:var(--muted);margin-bottom:10px;">I-reactivate ang lahat ng suspended customers.</div>
       <button class="btn btn-outline btn-sm" style="color:var(--green);border-color:var(--green);" onclick="demoResetCustomers(this)">✅ Reactivate All Customers</button>
     </div>
-
-    <!-- Invoice list -->
     <div style="font-size:12px;font-weight:700;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
       <span>📋 Current Invoices</span>
       <button class="btn btn-outline btn-sm" onclick="demoLoadInvoices()">🔄 Refresh</button>
@@ -496,19 +452,14 @@
 
 <script src="api.js"></script>
 <script>
-// Helper: get secure proof image URL
 function proofUrl(path) {
   const filename = (path || '').replace('uploads/proofs/', '');
   return 'api/serve_proof.php?file=' + encodeURIComponent(filename);
 }
-
-// Helper: ordinal suffix (1 → "st", 2 → "nd", etc.)
 function ord(n) {
   const s = ['th','st','nd','rd'], v = n % 100;
   return s[(v-20)%10] || s[v] || s[0];
 }
-
-// Helper: status badge HTML for invoices
 function badgeHtml(i) {
   if (i.status === 'paid')    return `<span class="badge paid">Paid</span>`;
   if (i.status === 'overdue') return `<span class="badge overdue">Overdue</span>`;
@@ -516,10 +467,10 @@ function badgeHtml(i) {
 }
 
 // ── STATE ──
-let currentUser   = null;
-let plans         = [];
-let editCustId    = null;
-let editInvId     = null;
+let currentUser = null;
+let plans       = [];
+let editCustId  = null;
+let editInvId   = null;
 
 // ── INIT ──
 window.addEventListener('load', async () => {
@@ -529,29 +480,18 @@ window.addEventListener('load', async () => {
   document.getElementById('sidebarName').textContent   = currentUser.name;
   const pr = await api(API.plans);
   if (pr.success) plans = pr.data;
-  // Auto-suspend overdue customers silently on every admin load
-  // Auto-suspend removed — manual lang ang suspend
-  // Auto-generate + send invoices on billing_day, daily reminders for unpaid
   fetch('api/cron_reminders.php?key=ruralwifi_cron', {headers:{'ngrok-skip-browser-warning':'1'}})
     .then(r=>r.json()).then(res => {
-      if (res.generated > 0)
-        showToast(`📬 ${res.generated} invoice(s) generated & sent!`);
-      if (res.reminded > 0)
-        showToast(`🔔 ${res.reminded} payment reminder(s) sent.`);
-      if (res.errors && res.errors.length > 0)
-        console.warn('[AutoBilling] Errors:', res.errors);
+      if (res.generated > 0) showToast(`📬 ${res.generated} invoice(s) generated & sent!`);
+      if (res.reminded  > 0) showToast(`🔔 ${res.reminded} payment reminder(s) sent.`);
+      if (res.errors && res.errors.length > 0) console.warn('[AutoBilling] Errors:', res.errors);
     }).catch(()=>{});
   showPage('dashboard');
-  // Polling — reliable fallback for all data
-  Realtime.start('badge', pollBadge, 8000);
+  Realtime.start('badge',    pollBadge,    8000);
   Realtime.start('msgbadge', pollMsgBadge, 5000);
   setInterval(() => Realtime.invalidate('dash-data'), 8000);
-
-  // Start SSE AFTER a short delay so dashboard loads first
-  // SSE is bonus realtime — polling handles reliability
   setTimeout(() => {
     try {
-      // Register SSE handlers
       Realtime.onSSE('pending_proofs', ({count}) => {
         const b = document.getElementById('pendingBadge');
         if (b) { b.textContent = count; b.style.display = count > 0 ? 'inline' : 'none'; }
@@ -562,20 +502,17 @@ window.addEventListener('load', async () => {
         if (mb) { mb.textContent = count; mb.style.display = count > 0 ? 'inline' : 'none'; }
       });
       Realtime.onSSE('invoice_counts', () => {
-        Realtime.invalidate('dash-data');
-        Realtime.invalidate('invs');
+        Realtime.invalidate('dash-data'); Realtime.invalidate('invs');
         if (document.getElementById('page-dashboard')?.classList.contains('active')) renderDashboard();
-        if (document.getElementById('page-invoices')?.classList.contains('active')) renderInvoices();
+        if (document.getElementById('page-invoices')?.classList.contains('active'))  renderInvoices();
       });
       Realtime.onSSE('notifications', () => {
         Realtime.invalidate('dash-data');
         if (document.getElementById('page-dashboard')?.classList.contains('active')) renderDashboard();
       });
       Realtime.connectSSE();
-    } catch(e) {
-      console.warn('[SSE] Failed to connect, using polling only:', e);
-    }
-  }, 2000); // wait 2s for dashboard to load first
+    } catch(e) { console.warn('[SSE] Failed, using polling only:', e); }
+  }, 2000);
 });
 
 // ── NAV ──
@@ -605,12 +542,11 @@ function showPage(name) {
   if (pollers[name]) pollers[name]();
 }
 
-// ── BADGE (payments) ──
+// ── BADGE ──
 async function pollBadge() {
   const pr = await api(API.payments);
   const n  = (pr.data||[]).filter(p=>p.proof_status==='pending').length;
   const b  = document.getElementById('pendingBadge');
-  if (!b) return;
   const mb = document.getElementById('mbnBadge');
   if (b)  { b.textContent=n;  b.style.display=n>0?'inline':'none'; }
   if (mb) { mb.textContent=n; mb.style.display=n>0?'inline':'none'; }
@@ -623,8 +559,8 @@ let convData       = [];
 
 async function loadConvList() {
   const res = await api(API.messages);
-  convData = res.data || [];
-  const el = document.getElementById('convList');
+  convData  = res.data || [];
+  const el  = document.getElementById('convList');
   if (!convData.length) {
     el.innerHTML = '<div class="noConvYet"><div style="font-size:24px;margin-bottom:6px;">💬</div><p style="font-size:13px;color:var(--muted);">No messages yet.</p></div>';
     return;
@@ -643,29 +579,22 @@ async function loadConvList() {
 async function openConv(custId, name, plan) {
   activeCustId   = custId;
   activeCustName = name;
-  document.getElementById('noChatSelected').style.display   = 'none';
+  document.getElementById('noChatSelected').style.display = 'none';
   const wrap = document.getElementById('activeChatWrap');
-  wrap.style.display    = 'flex';
+  wrap.style.display = 'flex';
   document.getElementById('chatAvatar').textContent = name[0].toUpperCase();
   document.getElementById('chatName').textContent   = name;
   document.getElementById('chatPlan').textContent   = plan || '';
-  // Highlight active conv
-  document.querySelectorAll('.convItem').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.convItem').forEach(el => {
-    if (el.textContent.trim().startsWith(name[0])) {/* handled by re-render */}
-  });
-  await loadConvList(); // re-render to update active highlight
+  await loadConvList();
   await loadMessages();
   document.getElementById('chatInput').focus();
 }
 
 async function loadMessages() {
   if (!activeCustId) return;
-  const res = await api(API.messages+'?customer_id='+activeCustId);
+  const res  = await api(API.messages+'?customer_id='+activeCustId);
   const msgs = res.data || [];
-  // Mark as read
   await api(API.messages, {action:'mark_read', customer_id:activeCustId});
-  // Update badge
   await pollMsgBadge();
   const el = document.getElementById('chatMsgs');
   if (!msgs.length) {
@@ -675,10 +604,7 @@ async function loadMessages() {
   el.innerHTML = msgs.map(m => {
     const isSent = m.sender_type === 'admin';
     const time   = new Date(m.sent_at||m.created_at).toLocaleString('en-PH',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
-    return `<div class="msg ${isSent?'sent':'recv'}">
-      ${m.message_text}
-      <div class="msgTime">${time}</div>
-    </div>`;
+    return `<div class="msg ${isSent?'sent':'recv'}">${m.message_text}<div class="msgTime">${time}</div></div>`;
   }).join('');
   el.scrollTop = el.scrollHeight;
 }
@@ -696,13 +622,11 @@ async function sendAdminMsg() {
 async function pollMessages() {
   await pollMsgBadge();
   if (activeCustId) loadMessages();
-  // Refresh conv list preview + unread counts
   const convRes = await api(API.messages);
   const newData = JSON.stringify(convRes.data||[]);
   if (pollMessages._lastConv !== newData) {
     pollMessages._lastConv = newData;
     convData = convRes.data || [];
-    // Re-render conv list without losing active selection
     const el = document.getElementById('convList');
     if (el && convData.length) {
       el.innerHTML = convData.map(c => `
@@ -719,21 +643,15 @@ async function pollMessages() {
 }
 
 async function pollMsgBadge() {
-  const res = await api(API.messages, {action:'unread_count'});
+  const res   = await api(API.messages, {action:'unread_count'});
   const total = res.data?.count || 0;
   ['msgBadge','mbnMsgBadge'].forEach(id => {
     const el = document.getElementById(id);
     if (el) { el.textContent=total; el.style.display=total>0?'inline':'none'; }
   });
-  // Toast if new message and not on messages page
   if (total > 0 && !document.getElementById('page-messages')?.classList.contains('active')) {
-    if (pollMsgBadge._last !== total) {
-      pollMsgBadge._last = total;
-      showToast('💬 New message from customer!');
-    }
-  } else {
-    pollMsgBadge._last = total;
-  }
+    if (pollMsgBadge._last !== total) { pollMsgBadge._last = total; showToast('💬 New message from customer!'); }
+  } else { pollMsgBadge._last = total; }
 }
 
 // ── DASHBOARD ──
@@ -741,10 +659,7 @@ async function renderDashboard() {
   await Realtime.ifChanged('dash-data',
     () => Promise.all([api(API.customers), api(API.invoices), api(API.payments)]),
     ([cR, iR, pR]) => {
-      if (!cR.success || !iR.success || !pR.success) {
-        console.warn('[Dashboard] API error:', cR.message, iR.message);
-        return; // Will retry on next interval
-      }
+      if (!cR.success || !iR.success || !pR.success) { console.warn('[Dashboard] API error'); return; }
       const custs   = cR.data || [];
       const invs    = iR.data || [];
       const proofs  = pR.data || [];
@@ -763,23 +678,17 @@ async function renderDashboard() {
       document.getElementById('rv-coll').textContent   = '₱'+coll.toLocaleString();
       document.getElementById('rv-out').textContent    = '₱'+(billed-coll).toLocaleString();
 
-      // Alert banner
-      const today      = new Date(); today.setHours(0,0,0,0);
-      const unsent     = unpaid.filter(i => i.sent_to_customer!=1 && Math.ceil((new Date(i.due_date)-today)/86400000)<=2 && Math.ceil((new Date(i.due_date)-today)/86400000)>=0);
-      const suspended  = custs.filter(c => c.status === 'suspended');
-      const banner     = document.getElementById('alertBanner');
-      const alertTxt   = document.getElementById('alertText');
-      const parts      = [];
+      const today     = new Date(); today.setHours(0,0,0,0);
+      const unsent    = unpaid.filter(i => i.sent_to_customer!=1 && Math.ceil((new Date(i.due_date)-today)/86400000)<=2 && Math.ceil((new Date(i.due_date)-today)/86400000)>=0);
+      const suspended = custs.filter(c => c.status === 'suspended');
+      const banner    = document.getElementById('alertBanner');
+      const alertTxt  = document.getElementById('alertText');
+      const parts     = [];
       if (pending.length)   parts.push(`<strong>${pending.length} payment proof(s)</strong> waiting for your review below`);
       if (suspended.length) parts.push(`<strong>${suspended.length} account(s) suspended</strong> — overdue`);
-      if (parts.length) {
-        alertTxt.innerHTML = parts.join(' &nbsp;·&nbsp; ');
-        banner.classList.add('show');
-      } else {
-        banner.classList.remove('show');
-      }
+      if (parts.length) { alertTxt.innerHTML = parts.join(' &nbsp;·&nbsp; '); banner.classList.add('show'); }
+      else { banner.classList.remove('show'); }
 
-      // Pending proofs section
       const pendHd   = document.getElementById('pendingHd');
       const pendList = document.getElementById('dashPendingList');
       if (pending.length) {
@@ -803,7 +712,7 @@ async function renderDashboard() {
               <button class="btn btn-red"   onclick="openRejectBox(${p.proof_id})">❌ Reject</button>
             </div>
             <div id="rb-${p.proof_id}" style="display:none;margin-top:10px;">
-              <input type="text" id="rr-${p.proof_id}" placeholder="Reason for rejection (e.g. Wrong ref, Blurry screenshot...)"
+              <input type="text" id="rr-${p.proof_id}" placeholder="Reason for rejection…"
                 style="width:100%;padding:9px 12px;border:1.5px solid var(--red);border-radius:8px;font-size:13px;outline:none;margin-bottom:8px;box-sizing:border-box;">
               <div style="display:flex;gap:8px;">
                 <button class="btn btn-outline btn-sm" style="flex:1;" onclick="closeRejectBox(${p.proof_id})">Cancel</button>
@@ -811,12 +720,8 @@ async function renderDashboard() {
               </div>
             </div>
           </div>`).join('');
-      } else {
-        pendHd.style.display = 'none';
-        pendList.innerHTML   = '';
-      }
+      } else { pendHd.style.display='none'; pendList.innerHTML=''; }
 
-      // Unsent invoices due soon
       const unsentHd   = document.getElementById('unsentHd');
       const unsentList = document.getElementById('dashUnsentList');
       if (unsent.length) {
@@ -834,22 +739,13 @@ async function renderDashboard() {
               <button class="btn btn-gold" onclick="sendOne(${i.invoice_id},this)">📤 Send</button>
             </div>
           </div>`}).join('');
-      } else {
-        unsentHd.style.display = 'none';
-        unsentList.innerHTML   = '';
-      }
+      } else { unsentHd.style.display='none'; unsentList.innerHTML=''; }
     }
   );
 }
 
-function openRejectBox(proofId) {
-  document.getElementById('rb-'+proofId).style.display = 'block';
-  document.getElementById('rr-'+proofId).focus();
-}
-function closeRejectBox(proofId) {
-  document.getElementById('rb-'+proofId).style.display = 'none';
-  document.getElementById('rr-'+proofId).value = '';
-}
+function openRejectBox(proofId) { document.getElementById('rb-'+proofId).style.display='block'; document.getElementById('rr-'+proofId).focus(); }
+function closeRejectBox(proofId) { document.getElementById('rb-'+proofId).style.display='none'; document.getElementById('rr-'+proofId).value=''; }
 async function confirmReject(proofId) {
   const reason = document.getElementById('rr-'+proofId).value.trim();
   if (!reason) {
@@ -877,19 +773,6 @@ async function sendOne(invoiceId, btn) {
   const res = await api(API.invoices, {action:'send', invoice_id:invoiceId});
   if (res.success) renderDashboard();
   else { alert('Error: '+res.message); btn.textContent='📤 Send'; btn.disabled=false; }
-}
-
-async function genAndSendAll(btn) {
-  btn.textContent='⏳ Generating…'; btn.disabled=true;
-  const gRes = await api(API.invoices, {action:'generate'});
-  btn.textContent='⚡ Generate Invoices'; btn.disabled=false;
-  const count = gRes.data?.generated || 0;
-  if (count > 0) {
-    showToast(`✅ Generated ${count} invoice(s). Review them in Invoices before sending.`);
-  } else {
-    showToast(gRes.message || 'All invoices already exist for this month.');
-  }
-  renderDashboard();
 }
 
 // ── CUSTOMERS ──
@@ -957,63 +840,48 @@ async function toggleStatus(id) {
 }
 
 // ── INVOICES ──
-let cashInvId   = null;
+let cashInvId = null;
 
 async function renderInvoices() {
-
   const [iRes, cRes] = await Promise.all([api(API.invoices), api(API.customers)]);
   const list       = iRes.data || [];
-  const custs      = cRes.data || [];
   const today      = new Date(); today.setHours(0,0,0,0);
   const monthLabel = new Date().toLocaleString('en-US', {month:'long', year:'numeric'});
-
-  // Due Soon section removed — cron handles invoice generation on billing_day
   document.getElementById('dueSoonSection').innerHTML = '';
-
   const thisMonth = list.filter(i => i.billing_month === monthLabel);
   const prevMonth = list.filter(i => i.billing_month !== monthLabel);
-
   document.getElementById('thisMonthSection').innerHTML = renderInvTable(thisMonth, today, `📅 ${monthLabel}`, true);
-  document.getElementById('prevMonthSection').innerHTML = prevMonth.length
-    ? renderInvTable(prevMonth, today, '🗂 Previous Months', false)
-    : '';
+  document.getElementById('prevMonthSection').innerHTML = prevMonth.length ? renderInvTable(prevMonth, today, '🗂 Previous Months', false) : '';
 }
 
 function renderInvTable(list, today, title, isThisMonth) {
   const unpaidCount = list.filter(i=>i.status==='unpaid').length;
   const paidCount   = list.filter(i=>i.status==='paid').length;
-
   if (!list.length) return `
     <div class="card" style="margin-bottom:12px;">
       <div class="cardHeader"><div class="cardTitle">${title}</div></div>
       <div class="cardBody"><div class="empty"><div class="emptyIcon">📄</div>
-        <p>${isThisMonth ? 'No invoices yet — will appear & send automatically on each customer\'s billing day.' : 'No previous invoices.'}</p>
+        <p>${isThisMonth ? "No invoices yet — will appear & send automatically on each customer's billing day." : 'No previous invoices.'}</p>
       </div></div>
     </div>`;
-
   const rows = list.map(i => {
     const due = new Date(i.due_date); due.setHours(0,0,0,0);
     const dl  = Math.ceil((due - today) / 86400000);
-    const billingDayThisMonth = new Date(today.getFullYear(), today.getMonth(), parseInt(i.billing_day||1));
-    const payUnlocked = today >= billingDayThisMonth;
     const method = i.payment_method === 'cash' ? '💵 Cash' : '📱 GCash';
     let sentCol, actionsCol;
-    const delBtn = `<button class="btn btn-red btn-sm" onclick="deleteInvoice(${i.invoice_id},'${i.customer_name.replace(/'/g,"\\'")}','${i.billing_month}')" title="Delete Invoice">🗑 Delete</button>`;
+    const delBtn = `<button class="btn btn-red btn-sm" onclick="deleteInvoice(${i.invoice_id},'${i.customer_name.replace(/'/g,"\\'")}','${i.billing_month}')">🗑 Delete</button>`;
     if (i.status === 'paid') {
-      sentCol    = `<span style="color:var(--green);font-size:12px;">✅ Sent</span>`;
+      sentCol = `<span style="color:var(--green);font-size:12px;">✅ Sent</span>`;
       actionsCol = `<span style="font-size:12px;color:var(--green);">${method}</span>`;
     } else if (i.sent_to_customer == 1) {
-      sentCol    = `<span style="color:var(--green);font-size:12px;">✅ Sent</span>`;
+      sentCol = `<span style="color:var(--green);font-size:12px;">✅ Sent</span>`;
       actionsCol = `
         <button class="btn btn-outline btn-sm" onclick="openEditDD(${i.invoice_id},'${i.due_date}')">📅 Edit Date</button>
         <button class="btn btn-green btn-sm" onclick="openCashPay(${i.invoice_id},'${i.customer_name.replace(/'/g,"\\'")}',${(i.monthly_fee||i.amount||0)},'${i.billing_month}')">💵 Cash</button>
         ${delBtn}`;
     } else {
-      // Invoice generated — cron will auto-send on billing_day
-      sentCol    = `<span style="font-size:12px;color:var(--muted);">⏳ Sends on ${i.due_date}</span>`;
-      actionsCol = `
-        <button class="btn btn-outline btn-sm" onclick="openEditDD(${i.invoice_id},'${i.due_date}')">📅 Edit Date</button>
-        ${delBtn}`;
+      sentCol = `<span style="font-size:12px;color:var(--muted);">⏳ Sends on ${i.due_date}</span>`;
+      actionsCol = `<button class="btn btn-outline btn-sm" onclick="openEditDD(${i.invoice_id},'${i.due_date}')">📅 Edit Date</button>${delBtn}`;
     }
     return `<tr>
       <td><strong>${i.customer_name}</strong></td>
@@ -1025,13 +893,12 @@ function renderInvTable(list, today, title, isThisMonth) {
       <td style="white-space:nowrap;">${actionsCol}</td>
     </tr>`;
   }).join('');
-
   const mCards = list.map(i => {
     const due = new Date(i.due_date); due.setHours(0,0,0,0);
     const dl  = Math.ceil((due - today) / 86400000);
     const method = i.payment_method === 'cash' ? '💵 Cash' : '📱 GCash';
     return `
-    <div class="m-card" style="border-left:4px solid ${i.status==='paid'?'var(--green)':dl<=0?'var(--red)':'var(--gold)'};"> 
+    <div class="m-card" style="border-left:4px solid ${i.status==='paid'?'var(--green)':dl<=0?'var(--red)':'var(--gold)'};">
       <div class="m-card-row">
         <div><div class="m-card-title">${i.customer_name}</div><div class="m-card-sub">${i.billing_month} · Due: ${i.due_date}</div></div>
         <div style="text-align:right;"><div class="m-card-amount">₱${parseFloat(i.monthly_fee||i.amount||0).toLocaleString()}</div>${badgeHtml(i)}</div>
@@ -1046,12 +913,10 @@ function renderInvTable(list, today, title, isThisMonth) {
                <button class="btn btn-red btn-sm" onclick="deleteInvoice(${i.invoice_id},'${i.customer_name.replace(/'/g,"\\'")}','${i.billing_month}')">🗑 Delete</button>`
             : `<span style="font-size:12px;color:var(--muted);">⏳ Sends on ${i.due_date}</span>
                <button class="btn btn-outline btn-sm" onclick="openEditDD(${i.invoice_id},'${i.due_date}')">📅 Edit</button>
-               <button class="btn btn-red btn-sm" onclick="deleteInvoice(${i.invoice_id},'${i.customer_name.replace(/'/g,"\\'")}','${i.billing_month}')">🗑 Delete</button>`
-            }
+               <button class="btn btn-red btn-sm" onclick="deleteInvoice(${i.invoice_id},'${i.customer_name.replace(/'/g,"\\'")}','${i.billing_month}')">🗑 Delete</button>`}
       </div>
     </div>`;
   }).join('');
-
   return `
   <div class="card" style="margin-bottom:12px;">
     <div class="cardHeader" style="justify-content:space-between;">
@@ -1073,19 +938,9 @@ function renderInvTable(list, today, title, isThisMonth) {
 async function deleteInvoice(invId, name, month) {
   if (!confirm(`Delete invoice for ${name} — ${month}?\nHindi na ito maibabalik.`)) return;
   const res = await api(API.invoices, {action:'delete', invoice_id: invId});
-  if (res.success) {
-    showToast(`🗑 Invoice deleted — ${name} ${month}`);
-    Realtime.invalidateAll();
-    renderInvoices();
-  } else {
-    showToast('❌ ' + (res.message || 'Failed to delete.'), 'error');
-  }
+  if (res.success) { showToast(`🗑 Invoice deleted — ${name} ${month}`); Realtime.invalidateAll(); renderInvoices(); }
+  else showToast('❌ ' + (res.message || 'Failed to delete.'));
 }
-
-// generateForCustomer removed — cron handles this automatically
-
-// sendNow removed — auto-send on billing_day via cron
-
 function openCashPay(invId, custName, amount, month) {
   cashInvId = invId;
   document.getElementById('cash-custName').textContent = custName;
@@ -1094,7 +949,6 @@ function openCashPay(invId, custName, amount, month) {
   document.getElementById('cash-note').value           = '';
   openModal('cashPayModal');
 }
-
 async function confirmCashPay() {
   const btn  = document.querySelector('#cashPayModal .btnPrimary');
   const note = document.getElementById('cash-note').value.trim() || 'Cash payment';
@@ -1102,12 +956,8 @@ async function confirmCashPay() {
   const res = await api(API.invoices, {action:'mark_paid_cash', invoice_id:cashInvId, note});
   btn.textContent='✅ Confirm Cash Payment'; btn.disabled=false;
   if (!res.success) { showToast('❌ '+(res.message||'Failed')); return; }
-  closeModal('cashPayModal');
-  showToast('✅ Marked as paid (Cash)!');
-  renderInvoices();
+  closeModal('cashPayModal'); showToast('✅ Marked as paid (Cash)!'); renderInvoices();
 }
-
-
 function openEditDD(id, date) { editInvId=id; document.getElementById('newDueDate').value=date; openModal('editDueDateModal'); }
 async function saveDueDate() {
   const date = document.getElementById('newDueDate').value;
@@ -1117,21 +967,27 @@ async function saveDueDate() {
   closeModal('editDueDateModal'); showToast('✅ Due date updated'); renderInvoices();
 }
 
-// ── GCASH ──
+// ── SETTINGS ──
+// ✅ FIX: loadGcash() — lahat ng getElementById ay safe na, may HTML na counterpart
 async function loadGcash() {
-  const res = await api(API.settings); const s = res.data||{};
-  document.getElementById('gcashNumber').value   = s.gcash_number||'';
-  document.getElementById('gcashName').value     = s.gcash_name||'';
-  document.getElementById('pvNum').textContent   = s.gcash_number||'—';
-  document.getElementById('pvName').textContent  = s.gcash_name||'—';
-  // Load email settings too
-  document.getElementById('smtpUser').value      = s.smtp_user||'';
-  document.getElementById('smtpFromName').value  = s.smtp_from_name||'Rural WiFi';
-  document.getElementById('smtpPass').placeholder = s.smtp_pass_set ? 'App password saved ✅ (leave blank to keep)' : 'Enter Gmail App Password';
-  if (s.smtp_pass_set) document.getElementById('emailStatus').textContent = '📧 Email is configured and ready.';
-  const appUrlEl = document.getElementById('appUrlInput');
-if (appUrlEl) appUrlEl.value = s.app_url || '';
+  const res = await api(API.settings);
+  const s   = res.data || {};
+  document.getElementById('gcashNumber').value    = s.gcash_number   || '';
+  document.getElementById('gcashName').value      = s.gcash_name     || '';
+  document.getElementById('pvNum').textContent    = s.gcash_number   || '—';
+  document.getElementById('pvName').textContent   = s.gcash_name     || '—';
+  document.getElementById('smtpUser').value       = s.smtp_user      || '';
+  document.getElementById('smtpFromName').value   = s.smtp_from_name || 'Rural WiFi';
+  document.getElementById('smtpPass').placeholder = s.smtp_pass_set
+    ? 'App password saved ✅ (leave blank to keep)'
+    : 'Enter Gmail App Password';
+  if (s.smtp_pass_set) {
+    document.getElementById('emailStatus').textContent = '📧 Email is configured and ready.';
+  }
+  // ✅ FIX: safe na — may HTML element na ngayon
+  document.getElementById('appUrlInput').value = s.app_url || '';
 }
+
 async function saveEmail() {
   const user = document.getElementById('smtpUser').value.trim();
   const name = document.getElementById('smtpFromName').value.trim();
@@ -1140,10 +996,17 @@ async function saveEmail() {
   if (!user) { msg.style.cssText='display:block;background:#fff0f0;color:var(--red);'; msg.textContent='Gmail address required.'; return; }
   const res = await api(API.settings, {action:'save_email', smtp_user:user, smtp_from_name:name, smtp_pass:pass});
   msg.style.display='block';
-  if (res.success) { msg.style.cssText='display:block;background:#f0fff4;color:var(--green);'; msg.textContent='✅ Email settings saved!'; document.getElementById('emailStatus').textContent='📧 Email is configured and ready.'; }
-  else { msg.style.cssText='display:block;background:#fff0f0;color:var(--red);'; msg.textContent='❌ '+(res.message||'Failed.'); }
+  if (res.success) {
+    msg.style.cssText='display:block;background:#f0fff4;color:var(--green);';
+    msg.textContent='✅ Email settings saved!';
+    document.getElementById('emailStatus').textContent='📧 Email is configured and ready.';
+  } else {
+    msg.style.cssText='display:block;background:#fff0f0;color:var(--red);';
+    msg.textContent='❌ '+(res.message||'Failed.');
+  }
   setTimeout(()=>msg.style.display='none', 3500);
 }
+
 async function testEmail() {
   const btn = document.getElementById('testEmailBtn');
   btn.textContent = 'Sending…'; btn.disabled = true;
@@ -1151,22 +1014,28 @@ async function testEmail() {
   btn.textContent = '🧪 Send Test Email'; btn.disabled = false;
   const msg = document.getElementById('emailMsg');
   msg.style.display = 'block';
-  if (res.success) { msg.style.cssText='display:block;background:#f0fff4;color:var(--green);'; msg.textContent='✅ '+(res.message||'Test email sent!'); }
-  else { msg.style.cssText='display:block;background:#fff0f0;color:var(--red);'; msg.textContent='❌ '+(res.message||'Failed.'); }
+  if (res.success) {
+    msg.style.cssText='display:block;background:#f0fff4;color:var(--green);';
+    msg.textContent='✅ '+(res.message||'Test email sent!');
+  } else {
+    msg.style.cssText='display:block;background:#fff0f0;color:var(--red);';
+    msg.textContent='❌ '+(res.message||'Failed.');
+  }
   setTimeout(()=>msg.style.display='none', 5000);
 }
+
 async function saveAppUrl() {
   const url = document.getElementById('appUrlInput').value.trim();
-const msg = document.getElementById('appUrlMsg');
-if (!msg) return;
-  if (!url) { msg.style.cssText='display:block;background:#fff0f0;color:var(--red);'; msg.textContent='Ilagay ang ngrok URL.'; setTimeout(()=>msg.style.display='none',3000); return; }
+  const msg = document.getElementById('appUrlMsg');
+  if (!url) { msg.style.cssText='display:block;background:#fff0f0;color:var(--red);'; msg.textContent='Ilagay ang Railway app URL.'; setTimeout(()=>msg.style.display='none',3000); return; }
   if (!url.startsWith('http')) { msg.style.cssText='display:block;background:#fff0f0;color:var(--red);'; msg.textContent='Dapat magsimula sa https://'; setTimeout(()=>msg.style.display='none',3000); return; }
   const res = await api(API.settings, {action:'save_app_url', app_url:url});
   msg.style.display='block';
-  if (res.success) { msg.style.cssText='display:block;background:#f0fff4;color:var(--green);'; msg.textContent='✅ Portal URL saved! Lahat ng email links ay updated na.'; }
+  if (res.success) { msg.style.cssText='display:block;background:#f0fff4;color:var(--green);'; msg.textContent='✅ Portal URL saved!'; }
   else { msg.style.cssText='display:block;background:#fff0f0;color:var(--red);'; msg.textContent='❌ '+(res.message||'Failed.'); }
   setTimeout(()=>msg.style.display='none', 4000);
 }
+
 async function saveGcash() {
   const num=document.getElementById('gcashNumber').value.trim(), name=document.getElementById('gcashName').value.trim();
   const msg=document.getElementById('gcashMsg');
@@ -1199,18 +1068,14 @@ function closeSidebar() {
   document.body.style.overflow='';
 }
 
-
 // ── DEMO MODE ──
 const DEMO_API = 'api/demo.php?key=demo2024';
-
 async function demoCall(body) {
   const res = await fetch(DEMO_API, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
   return res.json();
 }
-
 function demoPopulateMonths() {
-  const months = [];
-  const now = new Date();
+  const months = [], now = new Date();
   for (let i = -1; i <= 5; i++) {
     const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
     months.push(d.toLocaleString('en-US', {month:'long', year:'numeric'}));
@@ -1218,24 +1083,15 @@ function demoPopulateMonths() {
   const genSel = document.getElementById('demo-genMonth');
   if (genSel) genSel.innerHTML = months.map((m,i) => `<option value="${m}" ${i===1?'selected':''}>${m}</option>`).join('');
 }
-
 async function demoLoadStats() {
-  const [iRes, cRes, pRes, nRes] = await Promise.all([
-    api(API.invoices),
-    api(API.customers),
-    api(API.payments),
-    api(API.notifs)
-  ]);
-  const invs  = iRes.data  || [];
-  const custs = cRes.data  || [];
-  const pays  = pRes.data  || [];
-  const notifs = nRes.data?.notifications || [];
+  const [iRes, cRes, pRes, nRes] = await Promise.all([api(API.invoices), api(API.customers), api(API.payments), api(API.notifs)]);
+  const invs  = iRes.data || [];
+  const custs = cRes.data || [];
+  const pays  = pRes.data || [];
   document.getElementById('dst-inv').textContent   = invs.length;
   document.getElementById('dst-pay').textContent   = pays.filter(p=>p.proof_status==='accepted').length;
   document.getElementById('dst-notif').textContent = invs.filter(i=>i.status==='unpaid').length;
   document.getElementById('dst-susp').textContent  = custs.filter(c=>c.status==='suspended').length;
-
-  // Populate delete month options from actual invoices
   const months = [...new Set(invs.map(i=>i.billing_month))];
   const delSel = document.getElementById('demo-delMonth');
   if (delSel) {
@@ -1243,15 +1099,11 @@ async function demoLoadStats() {
       months.map(m=>`<option value="${m}">${m}</option>`).join('');
   }
 }
-
 async function demoLoadInvoices() {
   const res  = await demoCall({action:'list_invoices'});
   const el   = document.getElementById('demoInvList');
   const list = res.data || [];
-  if (!list.length) {
-    el.innerHTML = '<div style="text-align:center;color:var(--muted);padding:16px;font-size:13px;">No invoices.</div>';
-    return;
-  }
+  if (!list.length) { el.innerHTML='<div style="text-align:center;color:var(--muted);padding:16px;font-size:13px;">No invoices.</div>'; return; }
   el.innerHTML = list.map(i => `
     <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:8px;margin-bottom:5px;background:#fff;">
       <div style="flex:1;min-width:0;">
@@ -1262,7 +1114,6 @@ async function demoLoadInvoices() {
         onclick="demoDeleteOne(${i.invoice_id},'${i.customer_name.replace(/'/g,"\\'")}')">🗑</button>
     </div>`).join('');
 }
-
 async function demoGenerate(btn) {
   const month = document.getElementById('demo-genMonth').value;
   btn.textContent='⏳…'; btn.disabled=true;
@@ -1271,7 +1122,6 @@ async function demoGenerate(btn) {
   showToast(res.success ? `✅ ${res.message}` : `❌ ${res.message}`);
   if (res.success) { demoLoadStats(); demoLoadInvoices(); renderInvoices(); }
 }
-
 async function demoDelete(btn) {
   const month = document.getElementById('demo-delMonth').value;
   const label = month || 'ALL invoices';
@@ -1282,14 +1132,12 @@ async function demoDelete(btn) {
   showToast(res.success ? `✅ ${res.message}` : `❌ ${res.message}`);
   if (res.success) { demoLoadStats(); demoLoadInvoices(); renderInvoices(); renderDashboard(); }
 }
-
 async function demoDeleteOne(id, name) {
   if (!confirm(`Delete invoice of ${name}?`)) return;
   const res = await demoCall({action:'delete_invoice', invoice_id: id});
   showToast(res.success ? `✅ Deleted` : `❌ ${res.message}`);
   if (res.success) { demoLoadStats(); demoLoadInvoices(); renderInvoices(); renderDashboard(); }
 }
-
 async function demoResetCustomers(btn) {
   if (!confirm('Reactivate all suspended customers?')) return;
   btn.textContent='⏳…'; btn.disabled=true;

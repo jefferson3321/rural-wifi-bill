@@ -22,8 +22,13 @@ function getSmtpConfig(): array {
         ];
     } catch (Throwable $e) {
         return [
-            'host' => 'smtp.gmail.com', 'port' => 587, 'encryption' => 'tls',
-            'username' => '', 'password' => '', 'from_email' => '', 'from_name' => 'Rural WiFi',
+            'host'       => 'smtp.gmail.com',
+            'port'       => 587,
+            'encryption' => 'tls',
+            'username'   => '',
+            'password'   => '',
+            'from_email' => '',
+            'from_name'  => 'Rural WiFi',
         ];
     }
 }
@@ -34,41 +39,39 @@ function sendMail(string $toEmail, string $toName, string $subject, string $html
     }
 
     $cfg = getSmtpConfig();
-    $apiKey = $cfg['password']; // Resend API key stored in smtp_password
-    
-    if (empty($apiKey)) {
-        return ['success' => false, 'message' => 'Resend API key not configured.'];
+
+    if (empty($cfg['username']) || empty($cfg['password'])) {
+        return ['success' => false, 'message' => 'SMTP credentials not configured.'];
     }
 
-    $payload = json_encode([
-        'from'    => 'Rural WiFi <onboarding@resend.dev>',
-        'to'      => [$toEmail],
-        'subject' => $subject,
-        'html'    => $htmlBody,
-    ]);
+    $mail = new PHPMailer(true);
 
-    $ch = curl_init('https://api.resend.com/emails');
-    curl_setopt_array($ch, [
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST           => true,
-        CURLOPT_POSTFIELDS     => $payload,
-        CURLOPT_HTTPHEADER     => [
-            'Authorization: Bearer ' . $apiKey,
-            'Content-Type: application/json',
-        ],
-        CURLOPT_TIMEOUT        => 15,
-    ]);
+    try {
+        // ── Server Settings ──────────────────────────────────────────
+        $mail->isSMTP();
+        $mail->Host       = $cfg['host'];         // smtp.gmail.com
+        $mail->SMTPAuth   = true;
+        $mail->Username   = $cfg['username'];     // Gmail address
+        $mail->Password   = $cfg['password'];     // Gmail App Password
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = $cfg['port'];         // 587
 
-    $response = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
+        // ── Sender & Recipient ───────────────────────────────────────
+        $mail->setFrom($cfg['from_email'], $cfg['from_name']);
+        $mail->addAddress($toEmail, $toName);
 
-    if ($httpCode === 200 || $httpCode === 201) {
-        return ['success' => true, 'message' => 'Email sent.'];
+        // ── Content ──────────────────────────────────────────────────
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body    = $htmlBody;
+        $mail->AltBody = strip_tags($htmlBody);
+
+        $mail->send();
+        return ['success' => true, 'message' => 'Email sent successfully.'];
+
+    } catch (Exception $e) {
+        return ['success' => false, 'message' => $mail->ErrorInfo];
     }
-
-    $error = json_decode($response, true);
-    return ['success' => false, 'message' => $error['message'] ?? 'Failed to send email.'];
 }
 
 function emailWrapper(string $content): string {
@@ -86,8 +89,8 @@ function emailWrapper(string $content): string {
 }
 
 function buildWelcomeEmail(array $d): string {
-    $fee  = number_format((float)($d['monthly_fee'] ?? 0), 2);
-    $bday = (int)($d['billing_day'] ?? 1);
+    $fee    = number_format((float)($d['monthly_fee'] ?? 0), 2);
+    $bday   = (int)($d['billing_day'] ?? 1);
     $suffix = $bday === 1 ? 'st' : ($bday === 2 ? 'nd' : ($bday === 3 ? 'rd' : 'th'));
 
     $content = '
@@ -140,7 +143,7 @@ function buildDueReminderEmail(array $d): string {
         <table style="width:100%;border-collapse:collapse;font-size:14px;">
           <tr><td style="padding:4px 0;color:#666;width:140px;">Plan</td><td style="color:#1a1208;">' . htmlspecialchars($d['plan_name'] ?? '') . '</td></tr>
           <tr><td style="padding:4px 0;color:#666;">Amount Due</td><td style="color:#c8973a;font-weight:700;font-size:18px;">₱' . $amount . '</td></tr>
-          <tr><td style="padding:4px 0;color:#666;">Due Date</td><td style="color:#1a1208;">' . htmlspecialchars($due) . '  ' . $statusBadge . '</td></tr>
+          <tr><td style="padding:4px 0;color:#666;">Due Date</td><td style="color:#1a1208;">' . htmlspecialchars($due) . '&nbsp;&nbsp;' . $statusBadge . '</td></tr>
         </table>
       </div>
 
@@ -160,12 +163,12 @@ function buildDueReminderEmail(array $d): string {
 }
 
 function buildReceiptEmail(array $d): string {
-    $amount  = number_format((float)($d['amount'] ?? 0), 2);
-    $method  = htmlspecialchars($d['payment_method'] ?? 'GCash');
-    $ref     = htmlspecialchars($d['gcash_ref'] ?? '');
-    $paid    = htmlspecialchars($d['paid_date'] ?? date('Y-m-d'));
-    $month   = htmlspecialchars($d['billing_month'] ?? '');
-    $plan    = htmlspecialchars($d['plan_name'] ?? '');
+    $amount = number_format((float)($d['amount'] ?? 0), 2);
+    $method = htmlspecialchars($d['payment_method'] ?? 'GCash');
+    $ref    = htmlspecialchars($d['gcash_ref'] ?? '');
+    $paid   = htmlspecialchars($d['paid_date'] ?? date('Y-m-d'));
+    $month  = htmlspecialchars($d['billing_month'] ?? '');
+    $plan   = htmlspecialchars($d['plan_name'] ?? '');
 
     $content = '
       <h2 style="color:#1a1208;margin-top:0;">✅ Payment Confirmed!</h2>

@@ -4,9 +4,9 @@ function sendMail(string $toEmail, string $toName, string $subject, string $html
         return ['success' => false, 'message' => 'Invalid email address.'];
     }
 
-    $apiKey    = $_ENV['RESEND_API_KEY'] ?? '';
-    $fromEmail = $_ENV['FROM_EMAIL']     ?? 'onboarding@resend.dev';
-    $fromName  = $_ENV['FROM_NAME']      ?? 'Rural WiFi';
+   $apiKey    = $_ENV['RESEND_API_KEY'] ?? getenv('RESEND_API_KEY') ?? '';
+$fromEmail = $_ENV['FROM_EMAIL']     ?? getenv('FROM_EMAIL')     ?? 'onboarding@resend.dev';
+$fromName  = $_ENV['FROM_NAME']      ?? getenv('FROM_NAME')      ?? 'Rural WiFi';
 
     if (empty($apiKey)) {
         return ['success' => false, 'message' => 'Resend API key not configured.'];

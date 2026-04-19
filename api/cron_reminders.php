@@ -25,8 +25,7 @@ $sent         = 0;
 $reminded     = 0;
 $errors       = [];
 
-$smtpCfg   = getSmtpConfig();
-$smtpReady = !empty($smtpCfg['username']) && !empty($smtpCfg['password']);
+$smtpReady = !empty(getenv('RESEND_API_KEY'));
 
 function sentToday(PDO $db, int $custId, int $invId, string $type): bool {
     $stmt = $db->prepare("
@@ -94,11 +93,14 @@ foreach ($needInvoice as $c) {
     $db->prepare("UPDATE invoices SET sent_to_customer=1, sent_date=CURDATE() WHERE invoice_id=?")
        ->execute([$invoiceId]);
 
-    if (empty($c['email']) || !$smtpReady) {
-        if (!$smtpReady) $errors[] = $c['full_name'] . ': SMTP not configured.';
-        $sent++;
-        continue;
-    }
+   if (empty($c['email'])) {
+    $sent++;
+    continue;
+}
+if (!$smtpReady) {
+    $errors[] = $c['full_name'] . ': Resend API key not configured.';
+    continue;
+}
 
     $daysLeft = max(0, (int)$today->diff($due)->days * ($due >= $today ? 1 : -1));
 

@@ -62,6 +62,36 @@ function sendMail(string $toEmail, string $toName, string $subject, string $html
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_TIMEOUT, 15);
 
+    $response = curl_execfunction sendMail(string $toEmail, string $toName, string $subject, string $htmlBody): array {
+    if (!$toEmail || !filter_var($toEmail, FILTER_VALIDATE_EMAIL)) {
+        return ['success' => false, 'message' => 'Invalid email address.'];
+    }
+
+    $apiKey    = $_ENV['RESEND_API_KEY'] ?? '';
+    $fromEmail = $_ENV['FROM_EMAIL']     ?? 'onboarding@resend.dev';
+    $fromName  = $_ENV['FROM_NAME']      ?? 'Rural WiFi';
+
+    if (empty($apiKey)) {
+        return ['success' => false, 'message' => 'Resend API key not configured.'];
+    }
+
+    $payload = json_encode([
+        'from'    => $fromName . ' <' . $fromEmail . '>',
+        'to'      => [$toEmail],
+        'subject' => $subject,
+        'html'    => $htmlBody,
+    ]);
+
+    $ch = curl_init('https://api.resend.com/emails');
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Authorization: Bearer ' . $apiKey,
+        'Content-Type: application/json',
+    ]);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);

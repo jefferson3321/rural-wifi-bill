@@ -37,37 +37,41 @@ function sendMail(string $toEmail, string $toName, string $subject, string $html
         return ['success' => false, 'message' => 'Invalid email address.'];
     }
 
-    $cfg = getSmtpConfig();
+    $apiKey = $_ENV['RESEND_API_KEY'] ?? '';
+    $fromEmail = $_ENV['FROM_EMAIL'] ?? 'onboarding@resend.dev';
+    $fromName = $_ENV['FROM_NAME'] ?? 'Rural WiFi';
 
-    if (empty($cfg['username']) || empty($cfg['password'])) {
-        return ['success' => false, 'message' => 'SMTP credentials not configured.'];
+    if (empty($apiKey)) {
+        return ['success' => false, 'message' => 'Resend API key not configured.'];
     }
 
-    $mail = new PHPMailer(true);
+    $payload = json_encode([
+        'from'    => $fromName . ' <' . $fromEmail . '>',
+        'to'      => [$toEmail],
+        'subject' => $subject,
+        'html'    => $htmlBody,
+    ]);
 
-    try {
-        $mail->isSMTP();
-        $mail->Host       = $cfg['host'];
-        $mail->SMTPAuth   = true;
-        $mail->Username   = $cfg['username'];
-        $mail->Password   = $cfg['password'];
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port       = $cfg['port'];
+    $ch = curl_init('https://api.resend.com/emails');
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Authorization: Bearer ' . $apiKey,
+        'Content-Type: application/json',
+    ]);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
 
-        $mail->setFrom($cfg['from_email'], $cfg['from_name']);
-        $mail->addAddress($toEmail, $toName);
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
 
-        $mail->isHTML(true);
-        $mail->Subject = $subject;
-        $mail->Body    = $htmlBody;
-        $mail->AltBody = strip_tags($htmlBody);
-
-        $mail->send();
+    if ($httpCode === 200 || $httpCode === 201) {
         return ['success' => true, 'message' => 'Email sent successfully.'];
-
-    } catch (Exception $e) {
-        return ['success' => false, 'message' => $mail->ErrorInfo];
     }
+
+    $error = json_decode($response, true);
+    return ['success' => false, 'message' => $error['message'] ?? 'Failed to send email.'];
 }
 
 function emailWrapper(string $content): string {

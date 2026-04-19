@@ -46,20 +46,17 @@ function sendMail(string $toEmail, string $toName, string $subject, string $html
     $mail = new PHPMailer(true);
 
     try {
-        // ── Server Settings ──────────────────────────────────────────
         $mail->isSMTP();
-        $mail->Host       = $cfg['host'];         // smtp.gmail.com
+        $mail->Host       = $cfg['host'];
         $mail->SMTPAuth   = true;
-        $mail->Username   = $cfg['username'];     // Gmail address
-        $mail->Password   = $cfg['password'];     // Gmail App Password
+        $mail->Username   = $cfg['username'];
+        $mail->Password   = $cfg['password'];
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port       = $cfg['port'];         // 587
+        $mail->Port       = $cfg['port'];
 
-        // ── Sender & Recipient ───────────────────────────────────────
         $mail->setFrom($cfg['from_email'], $cfg['from_name']);
         $mail->addAddress($toEmail, $toName);
 
-        // ── Content ──────────────────────────────────────────────────
         $mail->isHTML(true);
         $mail->Subject = $subject;
         $mail->Body    = $htmlBody;

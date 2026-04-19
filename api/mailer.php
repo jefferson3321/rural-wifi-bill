@@ -1,68 +1,5 @@
 <?php
-require_once __DIR__ . '/../PHPMailer/Exception.php';
-require_once __DIR__ . '/../PHPMailer/PHPMailer.php';
-require_once __DIR__ . '/../PHPMailer/SMTP.php';
-
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
-function getSmtpConfig(): array {
-    try {
-        $db   = getDB();
-        $rows = $db->query("SELECT setting_key, setting_value FROM settings")
-                   ->fetchAll(PDO::FETCH_KEY_PAIR);
-        return [
-            'host'       => $rows['smtp_host']       ?? $_ENV['SMTP_HOST']     ?? 'smtp.gmail.com',
-            'port'       => (int)($rows['smtp_port'] ?? $_ENV['SMTP_PORT']     ?? 587),
-            'encryption' => $rows['smtp_encryption'] ?? $_ENV['SMTP_ENCRYPTION'] ?? 'tls',
-            'username'   => $rows['smtp_username']   ?? $_ENV['SMTP_USERNAME'] ?? '',
-            'password'   => $rows['smtp_password']   ?? $_ENV['SMTP_PASSWORD'] ?? '',
-            'from_email' => $rows['from_email']      ?? $_ENV['FROM_EMAIL']    ?? '',
-            'from_name'  => $rows['from_name']       ?? $_ENV['FROM_NAME']     ?? 'Rural WiFi',
-        ];
-    } catch (Throwable $e) {
-        return [
-            'host'       => $_ENV['SMTP_HOST']        ?? 'smtp.gmail.com',
-            'port'       => (int)($_ENV['SMTP_PORT']  ?? 587),
-            'encryption' => $_ENV['SMTP_ENCRYPTION']  ?? 'tls',
-            'username'   => $_ENV['SMTP_USERNAME']    ?? '',
-            'password'   => $_ENV['SMTP_PASSWORD']    ?? '',
-            'from_email' => $_ENV['FROM_EMAIL']       ?? '',
-            'from_name'  => $_ENV['FROM_NAME']        ?? 'Rural WiFi',
-        ];
-    }
-}
 function sendMail(string $toEmail, string $toName, string $subject, string $htmlBody): array {
-    if (!$toEmail || !filter_var($toEmail, FILTER_VALIDATE_EMAIL)) {
-        return ['success' => false, 'message' => 'Invalid email address.'];
-    }
-
-    $apiKey = $_ENV['RESEND_API_KEY'] ?? '';
-    $fromEmail = $_ENV['FROM_EMAIL'] ?? 'onboarding@resend.dev';
-    $fromName = $_ENV['FROM_NAME'] ?? 'Rural WiFi';
-
-    if (empty($apiKey)) {
-        return ['success' => false, 'message' => 'Resend API key not configured.'];
-    }
-
-    $payload = json_encode([
-        'from'    => $fromName . ' <' . $fromEmail . '>',
-        'to'      => [$toEmail],
-        'subject' => $subject,
-        'html'    => $htmlBody,
-    ]);
-
-    $ch = curl_init('https://api.resend.com/emails');
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        'Authorization: Bearer ' . $apiKey,
-        'Content-Type: application/json',
-    ]);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-
-    $response = curl_execfunction sendMail(string $toEmail, string $toName, string $subject, string $htmlBody): array {
     if (!$toEmail || !filter_var($toEmail, FILTER_VALIDATE_EMAIL)) {
         return ['success' => false, 'message' => 'Invalid email address.'];
     }
@@ -122,12 +59,10 @@ function buildWelcomeEmail(array $d): string {
     $fee    = number_format((float)($d['monthly_fee'] ?? 0), 2);
     $bday   = (int)($d['billing_day'] ?? 1);
     $suffix = $bday === 1 ? 'st' : ($bday === 2 ? 'nd' : ($bday === 3 ? 'rd' : 'th'));
-
     $content = '
       <h2 style="color:#1a1208;margin-top:0;">Welcome to Rural WiFi! 🎉</h2>
       <p style="color:#444;line-height:1.7;">Hi <strong>' . htmlspecialchars($d['full_name']) . '</strong>,<br>
       Your internet account has been created. Here are your login details:</p>
-
       <div style="background:#f5f2eb;border-radius:8px;padding:16px 20px;margin:16px 0;">
         <table style="width:100%;border-collapse:collapse;font-size:14px;">
           <tr><td style="padding:4px 0;color:#666;width:140px;">Username</td><td style="color:#1a1208;font-weight:700;">' . htmlspecialchars($d['username']) . '</td></tr>
@@ -137,15 +72,9 @@ function buildWelcomeEmail(array $d): string {
           <tr><td style="padding:4px 0;color:#666;">Billing Day</td><td style="color:#1a1208;">Every ' . $bday . $suffix . ' of the month</td></tr>
         </table>
       </div>
-
-      <p style="color:#444;line-height:1.7;">Log in to your customer portal to view your invoices and submit payments:</p>
       <div style="text-align:center;margin:20px 0;">
-        <a href="' . htmlspecialchars($d['login_url']) . '" style="background:#c8973a;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:700;font-size:15px;display:inline-block;">
-          Login to Portal →
-        </a>
-      </div>
-      <p style="color:#888;font-size:12px;">Keep your password safe. Contact us if you need help.</p>';
-
+        <a href="' . htmlspecialchars($d['login_url']) . '" style="background:#c8973a;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:700;font-size:15px;display:inline-block;">Login to Portal →</a>
+      </div>';
     return emailWrapper($content);
 }
 
@@ -154,7 +83,6 @@ function buildDueReminderEmail(array $d): string {
     $daysLeft = (int)($d['days_left'] ?? 0);
     $due      = $d['due_date'] ?? '';
     $month    = $d['billing_month'] ?? '';
-
     if ($daysLeft > 0) {
         $statusBadge = '<span style="background:#fff3cd;color:#856404;padding:4px 12px;border-radius:20px;font-size:13px;font-weight:600;">Due in ' . $daysLeft . ' day(s)</span>';
     } elseif ($daysLeft === 0) {
@@ -162,33 +90,19 @@ function buildDueReminderEmail(array $d): string {
     } else {
         $statusBadge = '<span style="background:#f8d7da;color:#721c24;padding:4px 12px;border-radius:20px;font-size:13px;font-weight:600;">🔴 OVERDUE</span>';
     }
-
     $content = '
       <h2 style="color:#1a1208;margin-top:0;">📋 Invoice for ' . htmlspecialchars($month) . '</h2>
       <p style="color:#444;">Hi <strong>' . htmlspecialchars($d['full_name']) . '</strong>, ' .
-      ($daysLeft > 0 ? 'your bill is coming up.' : ($daysLeft === 0 ? 'your bill is due <strong>today</strong>.' : 'your bill is <strong>overdue</strong>. Please pay as soon as possible.')) .
-      '</p>
-
+      ($daysLeft > 0 ? 'your bill is coming up.' : ($daysLeft === 0 ? 'your bill is due <strong>today</strong>.' : 'your bill is <strong>overdue</strong>.')) . '</p>
       <div style="background:#f5f2eb;border-radius:8px;padding:16px 20px;margin:16px 0;">
         <table style="width:100%;border-collapse:collapse;font-size:14px;">
-          <tr><td style="padding:4px 0;color:#666;width:140px;">Plan</td><td style="color:#1a1208;">' . htmlspecialchars($d['plan_name'] ?? '') . '</td></tr>
-          <tr><td style="padding:4px 0;color:#666;">Amount Due</td><td style="color:#c8973a;font-weight:700;font-size:18px;">₱' . $amount . '</td></tr>
+          <tr><td style="padding:4px 0;color:#666;width:140px;">Amount Due</td><td style="color:#c8973a;font-weight:700;font-size:18px;">₱' . $amount . '</td></tr>
           <tr><td style="padding:4px 0;color:#666;">Due Date</td><td style="color:#1a1208;">' . htmlspecialchars($due) . '&nbsp;&nbsp;' . $statusBadge . '</td></tr>
         </table>
       </div>
-
-      <p style="color:#444;line-height:1.7;"><strong>How to Pay (GCash):</strong><br>
-      Send ₱' . $amount . ' to GCash number <strong>' . htmlspecialchars($d['gcash_no'] ?? '') . '</strong><br>
-      Account Name: <strong>' . htmlspecialchars($d['gcash_name'] ?? '') . '</strong></p>
-
-      <p style="color:#444;line-height:1.7;">After payment, log in to your portal and upload your GCash screenshot as proof.</p>
-
       <div style="text-align:center;margin:20px 0;">
-        <a href="' . htmlspecialchars($d['login_url'] ?? '#') . '" style="background:#c8973a;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:700;font-size:15px;display:inline-block;">
-          Submit Payment Proof →
-        </a>
+        <a href="' . htmlspecialchars($d['login_url'] ?? '#') . '" style="background:#c8973a;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:700;font-size:15px;display:inline-block;">Submit Payment Proof →</a>
       </div>';
-
     return emailWrapper($content);
 }
 
@@ -199,25 +113,17 @@ function buildReceiptEmail(array $d): string {
     $paid   = htmlspecialchars($d['paid_date'] ?? date('Y-m-d'));
     $month  = htmlspecialchars($d['billing_month'] ?? '');
     $plan   = htmlspecialchars($d['plan_name'] ?? '');
-
     $content = '
       <h2 style="color:#1a1208;margin-top:0;">✅ Payment Confirmed!</h2>
-      <p style="color:#444;">Hi <strong>' . htmlspecialchars($d['full_name']) . '</strong>,<br>
-      Your payment has been verified and your account is active. Thank you!</p>
-
+      <p style="color:#444;">Hi <strong>' . htmlspecialchars($d['full_name']) . '</strong>,<br>Your payment has been verified!</p>
       <div style="background:#f5f2eb;border-radius:8px;padding:16px 20px;margin:16px 0;">
         <table style="width:100%;border-collapse:collapse;font-size:14px;">
           <tr><td style="padding:4px 0;color:#666;width:160px;">Billing Month</td><td style="color:#1a1208;">' . $month . '</td></tr>
-          <tr><td style="padding:4px 0;color:#666;">Plan</td><td style="color:#1a1208;">' . $plan . '</td></tr>
           <tr><td style="padding:4px 0;color:#666;">Amount Paid</td><td style="color:#2e7d52;font-weight:700;font-size:18px;">₱' . $amount . '</td></tr>
           <tr><td style="padding:4px 0;color:#666;">Payment Method</td><td style="color:#1a1208;">' . $method . '</td></tr>
           ' . ($ref ? '<tr><td style="padding:4px 0;color:#666;">GCash Ref #</td><td style="color:#1a1208;">' . $ref . '</td></tr>' : '') . '
           <tr><td style="padding:4px 0;color:#666;">Date Paid</td><td style="color:#1a1208;">' . $paid . '</td></tr>
         </table>
-      </div>
-
-      <p style="color:#444;line-height:1.7;">You can view your receipt and payment history anytime in your customer portal.</p>
-      <p style="color:#888;font-size:12px;">Keep enjoying fast internet! 🚀</p>';
-
+      </div>';
     return emailWrapper($content);
 }

@@ -34,24 +34,26 @@ try {
 $b   = json_decode(file_get_contents('php://input'), true) ?? [];
 $act = $b['action'] ?? 'get';
 
-if ($act === 'get') {
+if ($act === 'test_email' && $isAdmin) {
     try {
-        $rows = $db->query("SELECT setting_key, setting_value FROM settings")
-                   ->fetchAll(PDO::FETCH_KEY_PAIR);
-        out(true, 'OK', [
-            'gcash_number'    => $rows['gcash_number']    ?? '',
-            'gcash_name'      => $rows['gcash_name']      ?? '',
-            'smtp_user'       => $rows['smtp_username']   ?? '',
-            'smtp_from_name'  => $rows['from_name']       ?? 'Rural WiFi',
-            'smtp_pass_set'   => !empty($rows['smtp_password']),
-            'smtp_host'       => $rows['smtp_host']       ?? 'smtp.gmail.com',
-            'smtp_port'       => $rows['smtp_port']       ?? '587',
-            'smtp_encryption' => $rows['smtp_encryption'] ?? 'tls',
-            'from_email'      => $rows['from_email']      ?? '',
-            'app_url'         => $rows['app_url']         ?? '',
-        ]);
+        require_once __DIR__ . '/mailer.php';
+        $to = $_ENV['SMTP_USERNAME'] ?? '';
+        if (!$to) {
+            $smtp = $db->query("SELECT setting_key, setting_value FROM settings")->fetchAll(PDO::FETCH_KEY_PAIR);
+            $to   = $smtp['smtp_username'] ?? '';
+        }
+        if (!$to) {
+            out(false, 'No email configured yet.');
+        }
+        $result = sendMail($to, 'Admin', '✅ Test Email — Rural WiFi BillFlow',
+            "<div style='font-family:sans-serif;padding:20px;'>
+                <h2 style='color:#2e7d52;'>✅ Email is working!</h2>
+                <p>Sent via Resend API. Your email setup is working correctly!</p>
+            </div>"
+        );
+        out($result['success'], $result['message']);
     } catch (Throwable $e) {
-        out(false, 'Error loading settings: ' . $e->getMessage());
+        out(false, 'Test failed: ' . $e->getMessage());
     }
 }
 
